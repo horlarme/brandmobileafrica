@@ -1,0 +1,40 @@
+version: "3.8"
+volumes:
+  dbdata:
+networks:
+  application:
+    driver: bridge
+services:
+  nginx:
+    image: nginx:1.19-alpine
+    depends_on:
+      - php
+      - database
+    networks:
+      - application
+    volumes:
+      - ./public:/var/www/public
+      - ./server.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 8881:80
+  php:
+    image: php
+    working_dir: /var/www/public
+    volumes:
+      - ./public:/var/www/public
+    build:
+      context: .
+      dockerfile: PHPDockerfile
+    networks:
+      - application
+  database:
+    image: mariadb
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - application
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: database
+      MYSQL_USER: user_
+      MYSQL_PASSWORD: root
