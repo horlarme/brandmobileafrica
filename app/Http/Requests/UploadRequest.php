@@ -24,7 +24,7 @@ class UploadRequest extends FormRequest
     public function rules()
     {
         return [
-//            'file' => 'required|file|mimes:csv'
+            'file' => 'required|file|mimetypes:text/csv,text/plain,application/csv'
         ];
     }
 }
